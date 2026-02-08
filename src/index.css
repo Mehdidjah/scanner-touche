@@ -157,3 +157,58 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Contain A-Frame scene within its container */
+a-scene {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+a-scene canvas {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Prevent A-Frame from creating fullscreen overlays */
+.a-enter-vr,
+.a-orientation-modal {
+  display: none !important;
+}
+
+/* HIDE ALL 8TH WALL LOADING SCREENS AND BRANDING */
+.xrextras-loading,
+.xrextras-runtime-error,
+[class*="xrextras-loading"],
+[class*="xrextras-runtime"],
+.xrextras-loading-container,
+#loadingContainer,
+#requestingCameraPermissions,
+#cameraPermissionsErrorApple,
+#cameraPermissionsErrorAndroid,
+.xrextras-loading-inner {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Hide 8th Wall "Powered by" branding */
+[class*="powered"],
+[class*="8thwall"],
+[src*="powered-by"],
+img[src*="8thwall"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Make scene background transparent during initialization */
+.a-canvas {
+  background: transparent !important;
+}

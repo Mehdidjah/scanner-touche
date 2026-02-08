@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { ImageUpload } from "@/components/ImageUpload";
 import { FaceScanCamera } from "@/components/FaceScanCamera";
 import { DemographicForm } from "@/components/DemographicForm";
 import { AnalysisProgress } from "@/components/AnalysisProgress";
@@ -10,7 +9,7 @@ import { getRecommendations, RecommendationResult } from "@/lib/recommendations"
 import { generateSkincareRoutine } from "@/lib/api";
 import { SkincareRoutine } from "@/components/SkincareRoutineDisplay";
 import { useToast } from "@/hooks/use-toast";
-import { Sparkles, Shield, Zap, ArrowRight, Check, Camera } from "lucide-react";
+import { Sparkles, Shield, Zap, ArrowRight, Check } from "lucide-react";
 
 type AnalysisStage = "uploading" | "detecting" | "classifying" | "recommending" | "generating" | "complete";
 
