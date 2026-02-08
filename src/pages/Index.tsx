@@ -253,7 +253,7 @@ const Index = () => {
                 </div>
 
                 {/* Face Scanner (integrated in place of manual image upload) */}
-                <FaceScanCamera onCapture={handleImageSelect} />
+                <FaceScanCamera onCapture={handleImageSelect} onClear={handleClearImage} />
               </div>
 
               {/* Right: Demographics & Submit */}
