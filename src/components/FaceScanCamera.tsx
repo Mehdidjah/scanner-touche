@@ -64,40 +64,59 @@ export function FaceScanCamera({ onCapture }: FaceScanCameraProps) {
         // Initialize XR / A-Frame
         const init = () => {
             const win = window as any;
+            let attempts = 0;
+            const maxAttempts = 100; // 10 seconds max wait
 
-            if (!win.AFRAME || !win.XR8 || !win.THREE) {
-                initTimeout = setTimeout(init, 100);
-                return;
-            }
+            const tryInit = () => {
+                attempts++;
+                
+                // Check if scripts are loaded
+                if (!win.AFRAME || !win.XR8 || !win.THREE) {
+                    if (attempts < maxAttempts) {
+                        initTimeout = setTimeout(tryInit, 100);
+                        return;
+                    } else {
+                        console.error('8th Wall scripts failed to load after 10 seconds');
+                        setStatus('scanning'); // Show camera anyway
+                        return;
+                    }
+                }
 
-            const AFRAME = win.AFRAME;
-            const THREE = win.THREE;
+                const AFRAME = win.AFRAME;
+                const THREE = win.THREE;
 
-            // Hide any 8th Wall loading overlays that get injected
-            const hideLoadingScreens = () => {
-                const selectors = [
-                    '.xrextras-loading',
-                    '.xrextras-runtime-error',
-                    '[class*="xrextras-loading"]',
-                    '#loadingContainer',
-                    '[class*="powered"]',
-                ];
-                selectors.forEach(selector => {
-                    const elements = document.querySelectorAll(selector);
-                    elements.forEach(el => {
-                        (el as HTMLElement).style.display = 'none';
-                        (el as HTMLElement).style.opacity = '0';
-                        (el as HTMLElement).style.visibility = 'hidden';
+                // Hide any 8th Wall loading overlays that get injected
+                const hideLoadingScreens = () => {
+                    const selectors = [
+                        '.xrextras-loading',
+                        '.xrextras-runtime-error',
+                        '[class*="xrextras-loading"]',
+                        '#loadingContainer',
+                        '[class*="powered"]',
+                        '[id*="loading"]',
+                        '[id*="8thwall"]',
+                    ];
+                    selectors.forEach(selector => {
+                        try {
+                            const elements = document.querySelectorAll(selector);
+                            elements.forEach(el => {
+                                (el as HTMLElement).style.display = 'none';
+                                (el as HTMLElement).style.opacity = '0';
+                                (el as HTMLElement).style.visibility = 'hidden';
+                                (el as HTMLElement).style.pointerEvents = 'none';
+                            });
+                        } catch (e) {
+                            // Ignore selector errors
+                        }
                     });
-                });
-            };
+                };
 
-            // Run immediately and periodically to catch dynamically injected elements
-            hideLoadingScreens();
-            const hideInterval = setInterval(hideLoadingScreens, 100);
-            setTimeout(() => clearInterval(hideInterval), 3000);
+                // Run immediately and periodically to catch dynamically injected elements
+                hideLoadingScreens();
+                const hideInterval = setInterval(hideLoadingScreens, 100);
+                setTimeout(() => clearInterval(hideInterval), 5000);
 
-            try {
+                try {
                 // Register alpha-map
                 if (!AFRAME.components['alpha-map']) {
                     AFRAME.registerComponent('alpha-map', {
@@ -222,11 +241,17 @@ export function FaceScanCamera({ onCapture }: FaceScanCameraProps) {
                         }
                     });
                 }
-            } catch (error) {
-                console.error('Registration error:', error);
-            }
+                } catch (error) {
+                    console.error('Registration error:', error);
+                    setStatus('scanning'); // Continue anyway
+                }
+            };
+
+            // Start the initialization attempt
+            tryInit();
         };
 
+        // Start initialization
         init();
 
         // Hard fallback

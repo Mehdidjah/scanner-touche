@@ -17,16 +17,29 @@
   <meta name="twitter:site" content="@Lovable" />
   <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
-  <!-- 8th Wall AR Scripts for Face Tracking -->
+  <!-- 8th Wall AR Scripts for Face Tracking - Load before React -->
   <script crossorigin="anonymous" src="/external/scripts/8frame-1.3.0.min.js"></script>
   <script crossorigin="anonymous" src="/external/xrextras/xrextras.js"></script>
-  <script crossorigin="anonymous" src="/external/landing-page/landing-page.js"></script>
-  <script crossorigin="anonymous" src="/external/xr/xr.js" async="true" data-preload-chunks="face, slam"></script>
+  <script crossorigin="anonymous" src="/external/xr/xr.js" data-preload-chunks="face"></script>
 
   <!-- A-Frame meta tag for 8th Wall integration -->
   <meta name="8thwall:renderer" content="aframe:1.3.0" />
   <meta name="8thwall:package" content="@8thwall.xrextras" />
-  <meta name="8thwall:package" content="@8thwall.landing-page" />
+  
+  <!-- Hide 8th Wall loading screens immediately -->
+  <style>
+    .xrextras-loading,
+    .xrextras-runtime-error,
+    [class*="xrextras-loading"],
+    [class*="powered"],
+    [id*="loading"],
+    [id*="8thwall"] {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+  </style>
 </head>
 
 <body>
